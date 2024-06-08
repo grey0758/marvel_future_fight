@@ -463,10 +463,11 @@ class AppManager:
                     custom_config = r'--oem 3 --psm 6'
                     extracted_text_answer = pytesseract.image_to_string(cropped_image_answer, config=custom_config,
                                                                         lang='chi_sim')
-                    print(extracted_text_answer)
                     # 使用 split 方法按换行符分割字符串，得到一个列表
                     items = extracted_text_answer.split("\n")
-                    items = [item for item in items if item.replace(' ', '')]
+                    # 去除每个 item 中的所有空格，并过滤掉去除空格后为空的 item
+                    items = [item.replace(' ', '') for item in items if item.replace(' ', '')]
+
                     # 打印列表以确认存储的内容
                     print(items)
                     try:
