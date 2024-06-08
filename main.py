@@ -517,7 +517,7 @@ class AppManager:
             cropped_image = image[525:710, 447:1344]
             cropped_image = preprocess_image(cropped_image)
             extracted_text = pytesseract.image_to_string(cropped_image, lang='chi_sim').strip()  # 使用中文简体模型
-            extracted_text = extracted_text.replace('\n','').replace('\r','')
+            extracted_text = extracted_text.replace('\n', '').replace('\r', '').replace(' ', '')
             find_answer(extracted_text, questions)
             a += 1
             print(extracted_text)
