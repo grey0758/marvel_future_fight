@@ -201,11 +201,18 @@ class AppManager:
             self.activate_app("com.netmarble.mherosgb")
         return True
 
-    def Shadowland(self, hero=1):
+    def Shadowland(self, hero=1, first_set=False):
+
         def check_boos_flight_floor_element():
             try:
                 boos_flight_floor_element = self.find_and_click_image(
                     r'resource/images/shadowland/boos_flight_floor.png', image_match_threshold=0.8)
+                if not boos_flight_floor_element:
+                    self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                                              x_offset=-100)
+                    boos_flight_floor_element = self.find_and_click_image(
+                        r'resource/images/shadowland/boos_flight_floor.png', image_match_threshold=0.8)
+
                 a, b = boos_flight_floor_element.location['y'], boos_flight_floor_element.location['y'] + \
                                                                 boos_flight_floor_element.size['height']
                 c, d = boos_flight_floor_element.location['x'] + boos_flight_floor_element.size['width'] * 2, int(
@@ -277,17 +284,19 @@ class AppManager:
                 else:
                     self.find_and_click_image(r'resource/images/legend_war/img_7.png', image_match_threshold=0.6)
                     skip_to_next_cycle = True  # Set the flag to skip to the next cycle
+                    time.sleep(3)
 
         def handle_intermediate_stage():
             executed = False
             while True:
-                if not self.find_and_click_image(r'resource/images/shadowland/entershadowland.png', image_match_threshold=0.75, timeout=8):
+                if not self.find_and_click_image(r'resource/images/shadowland/entershadowland.png',
+                                                 image_match_threshold=0.75, timeout=8):
                     self.find_and_click_image(r'resource/images/shadowland/img_4.png', image_match_threshold=0.8,
                                               timeout=3)
                     if self.find_and_click_image(r'resource/images/shadowland/img_3.png', timeout=15):
                         return self.Shadowland()
                 if not self.find_and_click_image(r'resource/images/shadowland/img_6.png',
-                                                    image_match_threshold=0.8, y_offset=80, x_offset=100):
+                                                 image_match_threshold=0.8, y_offset=80, x_offset=100):
                     self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
                                               x_offset=-100)
                     self.find_and_click_image(r'resource/images/shadowland/img_6.png',
@@ -310,17 +319,25 @@ class AppManager:
 
                 self.find_and_click_image(r'resource/images/shadowland/continue.png', image_match_threshold=0.8,
                                           timeout=180)
-                time.sleep(1)
+                time.sleep(3)
 
-        def get_initial_stage():
+        def get_initial_stage(info_list):
+            time.sleep(2)
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
+                if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3):
+                    info_list[0] = True
+                    self.driver.tap([(437, 888)])
+                else:
+                    info_list[0] = False
                 if self.find_and_click_image(r'resource/images/shadowland/boos_flight_floor_2.png',
                                              image_match_threshold=0.6, timeout=3):
                     self.driver.press_keycode(4)
+
                     return 37
                 elif self.find_and_click_image(r'resource/images/shadowland/Lastseason.png', image_match_threshold=0.6,
                                                timeout=3):
+                    self.driver.tap([(437, 888)])
                     self.driver.press_keycode(4)
                     return 16
                 else:
@@ -331,7 +348,18 @@ class AppManager:
             else:
                 raise Exception("Unable to enter shadowland")
 
-        numbers = [get_initial_stage()]
+        # 调用代码示例
+        info_list = [False]
+
+        if first_set:
+            self.change_game_quality()
+            self.find_and_click_image(r'resource/images/start_war.png')
+            self.driver.tap([(979, 200)])
+            time.sleep(0.5)
+            self.driver.tap([(1320, 671)])
+            # self.find_and_click_image(r'resource/images/shadowland/img_8.png')
+
+        numbers = [get_initial_stage(info_list)]
         print(numbers)
         if int(numbers[0]) > 35:
             handle_shadowland_stage()
@@ -350,7 +378,7 @@ class AppManager:
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             self.find_and_click_image(r'resource/images/friend/img.png')
             self.find_and_click_image(r'resource/images/friend/img_1.png')
-            if self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2):
+            while self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2):
                 if self.find_and_click_image(r'resource/images/friend/img_3.png'):
                     self.find_and_click_image(r'resource/images/friend/img_4.png')
                     self.find_and_click_image(r'resource/images/friend/img_5.png')
@@ -358,8 +386,6 @@ class AppManager:
                 else:
                     self.find_and_click_image(r'resource/images/friend/img_6.png', timeout=2)
                     print("好友已经领取")
-            else:
-                print("好友已经领取")
 
         def union():
             self.check_obstacle()
@@ -625,9 +651,14 @@ class AppManager:
     def change_game_quality(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2260, 1000))
-        self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189))
-        if self.find_and_click_image(r'resource/images/change_game_quality/img_2.png', timeout_position=(2206, 56)):
-            self.driver.press_keycode(4)
+        # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189), image_match_threshold=0.93)
+        # self.find_and_click_image(r'resource/images/change_game_quality/img_2.png', timeout_position=(2206, 56), image_match_threshold=0.93)
+        # self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
+        time.sleep(0.3)
+        self.driver.tap([(536, 189)])  # 对应于 img_1.png 的点击
+        time.sleep(0.3)
+        self.driver.tap([(2206, 56)])  # 对应于 img_2.png 的点击
+        self.driver.press_keycode(4)
 
     def test(self):
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_7.png', timeout_position=(90, 404))
@@ -750,10 +781,9 @@ if __name__ == "__main__":
     # app_manager.daily_work_nox()
     # app_manager.legend_war()
     # app_manager.legend_war()
-    app_manager.Shadowland()
-    # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
+    # app_manager.Shadowland(first_set=True)
+    app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
+    app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
+    app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
-
