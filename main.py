@@ -466,7 +466,7 @@ class AppManager:
                     print(extracted_text_answer)
                     # 使用 split 方法按换行符分割字符串，得到一个列表
                     items = extracted_text_answer.split("\n")
-                    items = [item for item in items if item]
+                    items = [item for item in items if item.replace(' ', '')]
                     # 打印列表以确认存储的内容
                     print(items)
                     try:
