@@ -378,7 +378,8 @@ class AppManager:
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             self.find_and_click_image(r'resource/images/friend/img.png')
             self.find_and_click_image(r'resource/images/friend/img_1.png')
-            while self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2):
+            times = 0
+            while self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2) and times < 2:
                 if self.find_and_click_image(r'resource/images/friend/img_3.png'):
                     self.find_and_click_image(r'resource/images/friend/img_4.png')
                     self.find_and_click_image(r'resource/images/friend/img_5.png')
@@ -386,6 +387,7 @@ class AppManager:
                 else:
                     self.find_and_click_image(r'resource/images/friend/img_6.png', timeout=2)
                     print("好友已经领取")
+                times += 1
 
         def union():
             self.check_obstacle()
@@ -785,6 +787,6 @@ if __name__ == "__main__":
     # app_manager.Shadowland(first_set=True)
     app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
     app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
-    app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
+    # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
