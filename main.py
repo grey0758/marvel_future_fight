@@ -93,7 +93,7 @@ class AppManager:
         if self.driver:
             self.driver.activate_app(app_package)
 
-    def toggle_clash(self, action, timeout=10):
+    def toggle_clash(self, action, timeout=15):
         """根据参数启动或停止Clash应用"""
         try:
             # 激活Clash应用
