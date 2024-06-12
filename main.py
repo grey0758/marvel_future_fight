@@ -185,11 +185,11 @@ class AppManager:
                 print("未在指定时间内找到图像，且没有指定超时位置")
             return False
 
-    def login(self, is_clash=False, check_clash=True):
+    def login(self, is_clash=False, check_clash=True, timeout=10):
         if check_clash:
             self.toggle_clash("start")
         self.activate_app("com.netmarble.mherosgb")
-        time.sleep(6)
+        time.sleep(timeout)
         while True:
             if self.find_and_click_image(r'./resource/images/start_war.png', click=False, timeout=3,
                                          image_match_threshold=0.8):
@@ -401,7 +401,7 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/union/img_2.png')
                 print("公会已经领取")
 
-        self.login(is_clash=False)
+        self.login(is_clash=False, timeout=30)
         friend()
         union()
         self.store()

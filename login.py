@@ -5,7 +5,7 @@ from daily_work_nox import get_adb_devices
 
 def run_app_manager(appium_url, emulator_name):
     app_manager = AppManager(appium_url, emulator_name)
-    app_manager.login(is_clash=True)
+    app_manager.login(is_clash=True,timeout=20)
 
 
 if __name__ == "__main__":
