@@ -663,7 +663,7 @@ class AppManager:
         # self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
         time.sleep(0.3)
         self.driver.tap([(536, 189)])  # 对应于 img_1.png 的点击
-        time.sleep(0.3)
+        time.sleep(0.8)
         self.driver.tap([(2206, 56)])  # 对应于 img_2.png 的点击
         self.driver.press_keycode(4)
 
@@ -699,13 +699,15 @@ class AppManager:
                     'check_image_frequency': 14
                 }
             },
-            'task4': {
-                'image_path': 'path/to/image4.gif',
+            'Twisted_World': {
+                'image_path': r'resource/images/Companions_entering_randomly/img_10.png',
                 'subtasks': {
-                    'subtask_count': 0,
-                    'coordinates': []
+                    'subtask_count': 2,
+                    'coordinates': [(929, 572),(1533, 547)],
+                    'frequency': 3,
+                    'check_image_frequency': 14
                 }
-            }
+            },
         }
 
         def get_image_path(task_name):
@@ -782,15 +784,16 @@ if __name__ == "__main__":
     appium_url = 'http://localhost:4723'
 
     # app_manager = AppManager(appium_url, 'emulator-5560')
-    app_manager = AppManager(appium_url, '192.168.3.24:5559')
+    app_manager = AppManager(appium_url, '192.168.31.190:5559')
     # app_manager.store()
     # app_manager.Companions_entering_randomly('Brothers_in_Danger')
     # app_manager.daily_work_nox()
     # app_manager.legend_war()
     # app_manager.legend_war()
-    # app_manager.Shadowland(first_set=True)
-    app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
-    app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
+    app_manager.Shadowland(first_set=True)
+    # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
+    # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
     # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
+    # app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=7)
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
