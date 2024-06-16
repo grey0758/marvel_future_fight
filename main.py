@@ -325,9 +325,10 @@ class AppManager:
             time.sleep(2)
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
-                if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3):
+                if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False):
                     info_list[0] = True
                     self.driver.tap([(437, 888)])
+                    time.sleep(0.5)
                 else:
                     info_list[0] = False
                 if self.find_and_click_image(r'resource/images/shadowland/boos_flight_floor_2.png',
@@ -335,7 +336,7 @@ class AppManager:
                     self.driver.press_keycode(4)
 
                     return 37
-                elif self.find_and_click_image(r'resource/images/shadowland/Lastseason.png', image_match_threshold=0.6,
+                elif self.find_and_click_image(r'resource/images/shadowland/img_6.png', image_match_threshold=0.6,
                                                timeout=3):
                     self.driver.tap([(437, 888)])
                     self.driver.press_keycode(4)
@@ -347,6 +348,9 @@ class AppManager:
 
             else:
                 raise Exception("Unable to enter shadowland")
+
+        def get_initial_stage_2():
+            pass
 
         # 调用代码示例
         info_list = [False]
@@ -664,7 +668,8 @@ class AppManager:
         time.sleep(0.3)
         self.driver.tap([(536, 189)])  # 对应于 img_1.png 的点击
         time.sleep(0.8)
-        self.driver.tap([(2206, 56)])  # 对应于 img_2.png 的点击
+        self.driver.tap([(1197, 418)])  # 对应于 img_2.png 的点击
+        time.sleep(0.5)
         self.driver.press_keycode(4)
 
     def test(self):
@@ -792,8 +797,8 @@ if __name__ == "__main__":
     # app_manager.legend_war()
     app_manager.Shadowland(first_set=True)
     # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
     # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
+    # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
     # app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=7)
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
