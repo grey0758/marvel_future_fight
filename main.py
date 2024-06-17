@@ -321,16 +321,16 @@ class AppManager:
                                           timeout=180)
                 time.sleep(3)
 
-        def get_initial_stage(info_list):
+        def get_initial_stage(info_list_1):
             time.sleep(2)
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
                 if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False):
-                    info_list[0] = True
+                    info_list_1[0] = True
                     self.driver.tap([(437, 888)])
                     time.sleep(0.5)
                 else:
-                    info_list[0] = False
+                    info_list_1[0] = False
                 if self.find_and_click_image(r'resource/images/shadowland/boos_flight_floor_2.png',
                                              image_match_threshold=0.6, timeout=3):
                     self.driver.press_keycode(4)
@@ -352,9 +352,10 @@ class AppManager:
         def get_initial_stage_2():
             pass
 
-        get_initial_stage
+
         # 调用代码示例
         info_list = [False]
+        get_initial_stage(info_list)
 
         if first_set:
             self.change_game_quality()
@@ -418,7 +419,7 @@ class AppManager:
     def store(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404))
-        time.sleep(5)
+        time.sleep(8)
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404))
 
@@ -607,6 +608,10 @@ class AppManager:
                 break
             time.sleep(30)
 
+        self.check_obstacle()
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png', timeout_position=(1020, 191))
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png', timeout_position=(1952, 580))
+
     def otherworldly_battle(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
@@ -638,7 +643,7 @@ class AppManager:
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
-        time.sleep(4)
+        time.sleep(8)
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
@@ -663,9 +668,9 @@ class AppManager:
     def change_game_quality(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2260, 1000))
-        # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189), image_match_threshold=0.93)
-        # self.find_and_click_image(r'resource/images/change_game_quality/img_2.png', timeout_position=(2206, 56), image_match_threshold=0.93)
-        # self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
+        # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189),
+        # image_match_threshold=0.93) self.find_and_click_image(r'resource/images/change_game_quality/img_2.png',
+        # timeout_position=(2206, 56), image_match_threshold=0.93) self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
         time.sleep(0.3)
         self.driver.tap([(536, 189)])  # 对应于 img_1.png 的点击
         time.sleep(0.8)
@@ -709,7 +714,7 @@ class AppManager:
                 'image_path': r'resource/images/Companions_entering_randomly/img_10.png',
                 'subtasks': {
                     'subtask_count': 2,
-                    'coordinates': [(929, 572),(1533, 547)],
+                    'coordinates': [(929, 572), (1533, 547)],
                     'frequency': 3,
                     'check_image_frequency': 14
                 }
