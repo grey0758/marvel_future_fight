@@ -352,6 +352,7 @@ class AppManager:
         def get_initial_stage_2():
             pass
 
+        get_initial_stage
         # 调用代码示例
         info_list = [False]
 
