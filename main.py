@@ -426,7 +426,7 @@ class AppManager:
         union()
         self.store()
         self.otherworldly_battle()
-        if self.uuid not in ['emulator-5556']:
+        if self.uuid not in ['emulator-5554']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
 
@@ -622,10 +622,6 @@ class AppManager:
                 break
             time.sleep(30)
 
-        self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png', timeout_position=(1020, 191))
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png', timeout_position=(1952, 580))
-
     def otherworldly_battle(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
@@ -649,8 +645,16 @@ class AppManager:
                                           timeout_position=(1200, 900))
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img_10.png',
                                           timeout_position=(1666, 1022))
+                self.check_obstacle()
+                self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+                self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
+                self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
+                                          timeout_position=(1020, 191))
+                self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
+                                          timeout_position=(1952, 580))
                 break
             time.sleep(15)
+
 
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
