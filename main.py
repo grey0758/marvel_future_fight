@@ -288,13 +288,21 @@ class AppManager:
 
         def handle_intermediate_stage():
             executed = False
+            executed_1 = False
             while True:
                 if not self.find_and_click_image(r'resource/images/shadowland/entershadowland.png',
                                                  image_match_threshold=0.75, timeout=8):
                     self.find_and_click_image(r'resource/images/shadowland/img_4.png', image_match_threshold=0.8,
                                               timeout=3)
-                    if self.find_and_click_image(r'resource/images/shadowland/img_3.png', timeout=15):
-                        return self.Shadowland()
+                    self.find_and_click_image(r'resource/images/shadowland/img_12.png', timeout=6)
+
+                    return self.Shadowland()
+                if not executed_1:
+                    if not self.find_and_click_image(r'resource/images/shadowland/img_11.png',
+                                                     image_match_threshold=0.98, timeout=5, click=False):
+                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                                                  x_offset=-100)
+                        executed_1 = True
                 if not self.find_and_click_image(r'resource/images/shadowland/img_6.png',
                                                  image_match_threshold=0.8, y_offset=80, x_offset=100):
                     self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
@@ -316,46 +324,53 @@ class AppManager:
                 if not executed and self.find_and_click_image(r'resource/images/shadowland/img.png',
                                                               image_match_threshold=0.9, timeout=2):
                     self.find_and_click_image(r'resource/images/shadowland/img_1.png')
+                    executed = True
 
                 self.find_and_click_image(r'resource/images/shadowland/continue.png', image_match_threshold=0.8,
                                           timeout=180)
                 time.sleep(3)
 
-        def get_initial_stage(info_list_1):
+        def get_initial_stage():
             time.sleep(2)
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
-                if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False):
-                    info_list_1[0] = True
-                    self.driver.tap([(437, 888)])
-                    time.sleep(0.5)
+                if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False,
+                                             image_match_threshold=0.96):
+                    if self.find_and_click_image(r'resource/images/shadowland/img_6.png',
+                                                 image_match_threshold=0.8, y_offset=80, x_offset=100, click=False):
+                        self.driver.press_keycode(4)
+                        return 16
+                    else:
+                        self.driver.press_keycode(4)
+                        return 37
                 else:
-                    info_list_1[0] = False
-                if self.find_and_click_image(r'resource/images/shadowland/boos_flight_floor_2.png',
-                                             image_match_threshold=0.6, timeout=3):
-                    self.driver.press_keycode(4)
-
-                    return 37
-                elif self.find_and_click_image(r'resource/images/shadowland/img_6.png', image_match_threshold=0.6,
-                                               timeout=3):
-                    self.driver.tap([(437, 888)])
-                    self.driver.press_keycode(4)
-                    return 16
-                else:
-                    print("找不到boos_flight_floor.png和Lastseason.png")
-                    self.driver.press_keycode(4)
-                    return 37
-
+                    if self.find_and_click_image(r'resource/images/shadowland/boos_flight_floor_2.png',
+                                                 image_match_threshold=0.6, timeout=3):
+                        self.driver.press_keycode(4)
+                        return 37
+                    else:
+                        self.driver.press_keycode(4)
+                        return 16
             else:
                 raise Exception("Unable to enter shadowland")
 
         def get_initial_stage_2():
-            pass
-
-
-        # 调用代码示例
-        info_list = [False]
-        get_initial_stage(info_list)
+            time.sleep(2)
+            if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
+                time.sleep(2)
+                image = self.take_screenshot_cv2()
+                # 设置裁剪区域，格式为[y1:y2, x1:x2]
+                cropped_image = image[100:157, 935:1294]
+                cropped_image = preprocess_image(cropped_image)
+                extracted_text = pytesseract.image_to_string(cropped_image, lang='chi_sim').strip()  # 使用中文简体模型
+                extracted_text = extracted_text.replace('\n', '').replace('\r', '').replace(' ', '')
+                numbers_1 = re.findall(r'\d+', extracted_text)
+                if numbers_1:
+                    self.driver.press_keycode(4)
+                    return numbers_1[0]
+                else:
+                    self.driver.press_keycode(4)
+                    return 36
 
         if first_set:
             self.change_game_quality()
@@ -363,9 +378,8 @@ class AppManager:
             self.driver.tap([(979, 200)])
             time.sleep(0.5)
             self.driver.tap([(1320, 671)])
-            # self.find_and_click_image(r'resource/images/shadowland/img_8.png')
 
-        numbers = [get_initial_stage(info_list)]
+        numbers = [get_initial_stage()]
         print(numbers)
         if int(numbers[0]) > 35:
             handle_shadowland_stage()
@@ -731,13 +745,13 @@ class AppManager:
         number_of_battles_1 = 0
         index = 0
         is_continue = False
-        second_times = False
-        second_times_1 = True
+        # second_times = False
+        # second_times_1 = True
         while number_of_battles < mission['subtasks']['subtask_count'] * mission['subtasks']['frequency']:
-            if second_times and second_times_1:
-                check_image_frequency = check_image_frequency - 2
-                second_times_1 = False
-            second_times = True
+            # if second_times and second_times_1:
+            #     check_image_frequency = check_image_frequency - 2
+            #     second_times_1 = False
+            # second_times = True
             if not is_continue:
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img.png')
                 self.find_and_click_image(mission['image_path'])
@@ -801,7 +815,7 @@ if __name__ == "__main__":
     # app_manager.daily_work_nox()
     # app_manager.legend_war()
     # app_manager.legend_war()
-    app_manager.Shadowland(first_set=True)
+    app_manager.Shadowland(first_set=False)
     # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
     # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
     # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
