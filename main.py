@@ -407,7 +407,7 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/union/img_2.png')
                 print("公会已经领取")
 
-        self.login(is_clash=False, timeout=30)
+        self.login(is_clash=False, timeout=40)
         friend()
         union()
         self.store()
@@ -511,20 +511,21 @@ class AppManager:
             self.find_and_click_image(r'resource/images/daily_quiz/img_5.png')
 
         def open_daily_quiz():
+            self.change_game_quality()
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_1.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_2.png')
-            self.find_and_click_image(r'resource/images/daily_quiz/img_3.png')
+            self.find_and_click_image(r'resource/images/daily_quiz/img_3.png', image_match_threshold=0.96)
             self.find_and_click_image(r'resource/images/daily_quiz/img_4.png')
 
-        # open_daily_quiz()
+        open_daily_quiz()
         with open('resource/题库.json', mode='r', encoding='utf-8') as file:
             questions = json.load(file)
 
         # 循环五次
         a = 0
-        while a < 5:
+        while a < 6:
             image = self.take_screenshot_cv2()
             # 设置裁剪区域，格式为[y1:y2, x1:x2]
             cropped_image = image[525:710, 447:1344]
@@ -636,8 +637,11 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
                 self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
                                           timeout_position=(1020, 191))
-                self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
-                                          timeout_position=(1952, 580))
+                self.find_and_click_image(r'resource/images/multiverse_invasion/img_9.p'
+                                          r''
+                                          r''
+                                          r'ng',
+                                          timeout_position=(1952, 580), image_match_threshold=0.6)
                 break
             time.sleep(15)
 
