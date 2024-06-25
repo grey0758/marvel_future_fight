@@ -8,10 +8,15 @@ def run_app_manager(appium_url_1, emulator_name):
     times = 6
     if emulator_name == 'f9efd3f2':
         times = 7
-    app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=times)
-    app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=times)
-    app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=times)
-    app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=times)
+        # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=times)
+        # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=times)
+        # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=times)
+        # app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=times)
+    else:
+        app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=times)
+        app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=times)
+        app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=times)
+        app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=times)
 
 
 def get_adb_devices():

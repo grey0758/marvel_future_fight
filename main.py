@@ -288,7 +288,7 @@ class AppManager:
 
         def handle_intermediate_stage():
             executed = False
-            executed_1 = False
+            # executed_1 = False
             while True:
                 if not self.find_and_click_image(r'resource/images/shadowland/entershadowland.png',
                                                  image_match_threshold=0.75, timeout=8):
@@ -297,18 +297,16 @@ class AppManager:
                     self.find_and_click_image(r'resource/images/shadowland/img_12.png', timeout=6)
 
                     return self.Shadowland()
-                if not executed_1:
-                    if not self.find_and_click_image(r'resource/images/shadowland/img_11.png',
-                                                     image_match_threshold=0.98, timeout=5, click=False):
-                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
-                                                  x_offset=-100)
-                        executed_1 = True
-                if not self.find_and_click_image(r'resource/images/shadowland/img_6.png',
-                                                 image_match_threshold=0.8, y_offset=80, x_offset=100):
-                    self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
-                                              x_offset=-100)
-                    self.find_and_click_image(r'resource/images/shadowland/img_6.png',
-                                              image_match_threshold=0.8, y_offset=80, x_offset=100)
+                # if not executed_1:
+                #     if not self.find_and_click_image(r'resource/images/shadowland/img_11.png',
+                #                                      image_match_threshold=0.95, timeout=5, click=False):
+                #         self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                #                                   x_offset=-100)
+                #         executed_1 = True
+                #     executed_1 = True
+                self.find_and_click_image(r'resource/images/shadowland/img_6.png',
+                                          image_match_threshold=0.8, y_offset=80, x_offset=100)
+
                 # self.driver.tap([(element.location['x'] + 200, element.location['y'] + 100)])
                 self.find_and_click_image(r'resource/images/shadowland/descending.png', click=False)
                 if hero == 3:
@@ -335,12 +333,15 @@ class AppManager:
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
                 if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False,
-                                             image_match_threshold=0.96):
+                                             image_match_threshold=0.95):
                     if self.find_and_click_image(r'resource/images/shadowland/img_6.png',
                                                  image_match_threshold=0.8, y_offset=80, x_offset=100, click=False):
                         self.driver.press_keycode(4)
                         return 16
                     else:
+                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                                                  x_offset=-100)
+                        time.sleep(0.5)
                         self.driver.press_keycode(4)
                         return 37
                 else:
@@ -349,6 +350,8 @@ class AppManager:
                         self.driver.press_keycode(4)
                         return 37
                     else:
+                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                                                  x_offset=-100)
                         self.driver.press_keycode(4)
                         return 16
             else:
@@ -421,7 +424,7 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/union/img_2.png')
                 print("公会已经领取")
 
-        self.login(is_clash=False, timeout=40)
+        self.login(is_clash=False, timeout=30)
         friend()
         union()
         self.store()
@@ -525,21 +528,20 @@ class AppManager:
             self.find_and_click_image(r'resource/images/daily_quiz/img_5.png')
 
         def open_daily_quiz():
-            self.change_game_quality()
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_1.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_2.png')
-            self.find_and_click_image(r'resource/images/daily_quiz/img_3.png', image_match_threshold=0.96)
+            self.find_and_click_image(r'resource/images/daily_quiz/img_3.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_4.png')
 
-        open_daily_quiz()
+        # open_daily_quiz()
         with open('resource/题库.json', mode='r', encoding='utf-8') as file:
             questions = json.load(file)
 
         # 循环五次
         a = 0
-        while a < 6:
+        while a < 5:
             image = self.take_screenshot_cv2()
             # 设置裁剪区域，格式为[y1:y2, x1:x2]
             cropped_image = image[525:710, 447:1344]
@@ -651,11 +653,10 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
                 self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
                                           timeout_position=(1020, 191))
-                self.find_and_click_image(r'resource/images/multiverse_invasion/img_9.p'
-                                          r''
-                                          r''
-                                          r'ng',
-                                          timeout_position=(1952, 580), image_match_threshold=0.6)
+                self.find_and_click_image(r'resource/images/multiverse_invasion/img_9.png',
+                                          timeout_position=(1952, 580))
+                self.driver.tap([(1952, 580)])
+                time.sleep(.5)
                 break
             time.sleep(15)
 
