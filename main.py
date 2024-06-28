@@ -437,6 +437,8 @@ class AppManager:
         if self.uuid not in ['emulator-5554']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
+        self.check_obstacle()
+        self.daily_quiz()
 
     def store(self):
         self.check_obstacle()
@@ -613,12 +615,12 @@ class AppManager:
 
     def multiverse_invasion(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
@@ -633,11 +635,11 @@ class AppManager:
 
     def otherworldly_battle(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_2.png', timeout_position=(1400, 1000))
         if self.find_and_click_image(r'resource/images/otherworldly_battle/img_8.png'):
@@ -669,14 +671,14 @@ class AppManager:
 
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177), direct_click_coordinates=True)
         # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_4.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
@@ -696,7 +698,7 @@ class AppManager:
     # 修改游戏画质
     def change_game_quality(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2260, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55), direct_click_coordinates=True)
         # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189),
         # image_match_threshold=0.93) self.find_and_click_image(r'resource/images/change_game_quality/img_2.png',
         # timeout_position=(2206, 56), image_match_threshold=0.93) self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
@@ -819,6 +821,21 @@ class AppManager:
 
             time.sleep(2)
 
+    def plot(self):
+        self.check_obstacle()
+
+    def get_id(self):
+        self.check_obstacle()
+        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55),
+                                  direct_click_coordinates=True)
+        time.sleep(1)
+        self.find_and_click_image(r'resource/images/get_id/img.png', timeout_position=(1555, 382),
+                                  direct_click_coordinates=True)
+
+        # 获取剪贴板内容
+        clipboard_text = self.driver.get_clipboard_text()
+        print("Clipboard content:", clipboard_text)
+
 
 if __name__ == "__main__":
     appium_url = 'http://localhost:4723'
@@ -830,10 +847,6 @@ if __name__ == "__main__":
     # app_manager.daily_work_nox()
     # app_manager.legend_war()
     # app_manager.legend_war()
-    app_manager.Shadowland(first_set=False)
-    # app_manager.Companions_entering_randomly('Brothers_in_Danger', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Spatiotemporal_splitting', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Stupid_X-Men', check_image_frequency=7)
-    # app_manager.Companions_entering_randomly('Twisted_World', check_image_frequency=7)
+    app_manager.get_id()
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
