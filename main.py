@@ -137,7 +137,7 @@ class AppManager:
 
     def find_and_click_image(self, image_path, click=True, find_multiple=False, click_index=None,
                              image_match_threshold=0.9, timeout=5.0, timeout_position=None, poll_frequency=0.5,
-                             x_offset=0, y_offset=0):
+                             x_offset=0, y_offset=0, direct_click_coordinates=False):
         """
         查找图像元素并点击。
         :param poll_frequency:
@@ -150,8 +150,13 @@ class AppManager:
         :param timeout_position: 在超时情况下点击的位置，默认为None。
         :param x_offset: 点击时的x坐标偏移量，仅适用于单个元素。
         :param y_offset: 点击时的y坐标偏移量，仅适用于单个元素。
+        :param direct_click_coordinates: 如果为True，直接点击timeout_position提供的坐标。
         :return: 找到的元素或元素列表，或者在超时情况下返回 False。
         """
+        if direct_click_coordinates and timeout_position:
+            self.driver.tap([timeout_position])
+            return True
+
         self.driver.update_settings({"imageMatchThreshold": image_match_threshold})
 
         try:
@@ -180,7 +185,7 @@ class AppManager:
         except TimeoutException:
             if timeout_position:
                 self.driver.tap([timeout_position])
-                print("")
+                print("已在超时位置点击")
             else:
                 print("未在指定时间内找到图像，且没有指定超时位置")
             return False
@@ -435,10 +440,10 @@ class AppManager:
 
     def store(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404))
+        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404), direct_click_coordinates=True)
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404))
+        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404), direct_click_coordinates=True)
 
         if self.find_and_click_image(r'resource/images/normal_store/img_1.png'):
             if self.find_and_click_image(r'resource/images/normal_store/img_3.png',
@@ -529,13 +534,14 @@ class AppManager:
 
         def open_daily_quiz():
             self.check_obstacle()
+            self.change_game_quality()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_1.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_2.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_3.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_4.png')
 
-        # open_daily_quiz()
+        open_daily_quiz()
         with open('resource/题库.json', mode='r', encoding='utf-8') as file:
             questions = json.load(file)
 
@@ -607,12 +613,12 @@ class AppManager:
 
     def multiverse_invasion(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
@@ -627,11 +633,11 @@ class AppManager:
 
     def otherworldly_battle(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_2.png', timeout_position=(1400, 1000))
         if self.find_and_click_image(r'resource/images/otherworldly_battle/img_8.png'):
@@ -640,7 +646,8 @@ class AppManager:
             return
         else:
             self.driver.tap([(1224, 711)])
-            self.find_and_click_image(r'resource/images/otherworldly_battle/img_4.png', timeout_position=(1340, 850))
+            time.sleep(0.5)
+            self.find_and_click_image(r'resource/images/otherworldly_battle/img_4.png', timeout_position=(1340, 850), direct_click_coordinates=True)
         while True:
             if self.find_and_click_image(r'resource/images/otherworldly_battle/img_7.png'):
                 print('异世战斗完成')
@@ -660,18 +667,17 @@ class AppManager:
                 break
             time.sleep(15)
 
-
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177), direct_click_coordinates=True)
         # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_4.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
         if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_5.png'):
@@ -690,7 +696,7 @@ class AppManager:
     # 修改游戏画质
     def change_game_quality(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2260, 1000))
+        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2260, 1000), direct_click_coordinates=True)
         # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189),
         # image_match_threshold=0.93) self.find_and_click_image(r'resource/images/change_game_quality/img_2.png',
         # timeout_position=(2206, 56), image_match_threshold=0.93) self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击
