@@ -434,7 +434,7 @@ class AppManager:
         union()
         self.store()
         self.otherworldly_battle()
-        if self.uuid not in ['emulator-5554']:
+        if self.uuid not in ['emulator-5554', 'emulator-5556']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
         self.check_obstacle()
@@ -615,12 +615,12 @@ class AppManager:
 
     def multiverse_invasion(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
@@ -635,11 +635,11 @@ class AppManager:
 
     def otherworldly_battle(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_2.png', timeout_position=(1400, 1000))
         if self.find_and_click_image(r'resource/images/otherworldly_battle/img_8.png'):
@@ -671,14 +671,14 @@ class AppManager:
 
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177), direct_click_coordinates=True)
         # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_4.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
