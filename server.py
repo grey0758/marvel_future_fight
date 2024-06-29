@@ -23,7 +23,6 @@ db_config = {
     'database': 'marvel_future_flight',
 }
 
-
 def save_log_to_mysql(timestamp, status, message):
     """保存日志到MySQL数据库"""
     connection = None
@@ -39,7 +38,6 @@ def save_log_to_mysql(timestamp, status, message):
         if connection:
             connection.close()
 
-
 def log_game_task_status(status, message):
     """记录游戏任务状态"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -51,7 +49,6 @@ def log_game_task_status(status, message):
     }
     logger.info(json.dumps(log_entry))
 
-
 def complete_daily_task(task):
     """执行每日任务"""
     try:
@@ -60,7 +57,6 @@ def complete_daily_task(task):
         log_game_task_status("SUCCESS", f"每日任务完成: {task['description']}")
     except Exception as e:
         log_game_task_status("ERROR", f"执行每日任务时出错: {str(e)}")
-
 
 def complete_weekly_task(task):
     """执行每周任务"""
@@ -71,7 +67,6 @@ def complete_weekly_task(task):
     except Exception as e:
         log_game_task_status("ERROR", f"执行每周任务时出错: {str(e)}")
 
-
 def complete_game_task(task):
     """根据任务类型执行游戏任务"""
     task_type = task.get('task_type')
@@ -79,9 +74,14 @@ def complete_game_task(task):
         complete_daily_task(task)
     elif task_type == 'weekly_task':
         complete_weekly_task(task)
+    elif task_type == 'open_game':
+        account_name = task.get('account_name')
+        log_game_task_status("INFO", f"开始打开游戏账号: {account_name}")
+        from game_launcher import open_game_account
+        open_game_account(account_name)
+        log_game_task_status("SUCCESS", f"游戏账号已打开: {account_name}")
     else:
         log_game_task_status("ERROR", f"未知任务类型: {task_type}")
-
 
 def consume_task():
     """从Redis队列中提取任务并执行"""
@@ -96,7 +96,6 @@ def consume_task():
                 time.sleep(5)
         except Exception as e:
             log_game_task_status("ERROR", f"提取任务时出错: {str(e)}")
-
 
 if __name__ == "__main__":
     consume_task()

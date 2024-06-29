@@ -29,6 +29,16 @@ task2 = {
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
-add_task_to_queue(task1)
-add_task_to_queue(task2)
+task3 = {
+    "task_id": 3,
+    "task_type": "open_game",
+    "account_name": "蛋挞菩提",
+    "description": "Open game account 蛋挞菩提",
+    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+}
+
+# add_task_to_queue(task1)
+# add_task_to_queue(task2)
+add_task_to_queue(task3)
+
 print("任务已添加到队列")
