@@ -34,11 +34,13 @@ if not ldplayer_path:
 logger.add("game_task.log", rotation="1 day")
 
 # 配置Redis连接
-REDIS_HOST = '121.37.30.225'
-REDIS_PORT = 6379
-REDIS_PASSWORD = 'ya6MCCTXsnPfYJg'
-
-redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, decode_responses=True)
+redis_client = redis.StrictRedis(
+    host='121.37.30.225',
+    port=6379,
+    password='ya6MCCTXsnPfYJg',
+    decode_responses=True,
+    socket_timeout=10  # 增加超时时间，单位是秒
+)
 
 # 配置MySQL连接
 db_config = {
