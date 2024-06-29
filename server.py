@@ -1,3 +1,5 @@
+import os
+
 import redis
 import json
 import pymysql
@@ -14,7 +16,19 @@ import psutil
 import subprocess
 
 import daily_work_nox
-from main import AppManager
+
+# 读取配置文件
+config_path = 'config.json'
+if not os.path.exists(config_path):
+    raise FileNotFoundError(f"配置文件 {config_path} 未找到")
+
+with open(config_path, 'r') as config_file:
+    config = json.load(config_file)
+
+# 获取 LDPlayer 路径
+ldplayer_path = config.get('ldplayer_path')
+if not ldplayer_path:
+    raise ValueError("配置文件中缺少 'ldplayer_path' 项")
 
 # 配置日志
 logger.add("game_task.log", rotation="1 day")
@@ -98,7 +112,7 @@ def start_and_focus_app():
     close_ldplayer_process()
 
     # 启动模拟器管理器应用程序
-    app = Application().start("D:\LDPlayer\ldmutiplayer\dnmultiplayerex.exe")
+    app = Application().start(ldplayer_path)
 
     # 等待应用程序启动
     time.sleep(5)
