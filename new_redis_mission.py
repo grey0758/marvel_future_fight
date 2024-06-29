@@ -9,10 +9,12 @@ REDIS_PASSWORD = 'ya6MCCTXsnPfYJg'
 
 redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, decode_responses=True)
 
+
 def add_task_to_queue(task):
     """将任务添加到Redis队列"""
     task_data = json.dumps(task)
     redis_client.lpush("game_tasks", task_data)
+
 
 # 示例任务
 task1 = {
@@ -37,8 +39,17 @@ task3 = {
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
+combined_task = {
+    "task_id": 3,
+    "task_type": "open_game",
+    "account_names": ["蛋挞菩提", "大号"],
+    "description": "Open game accounts 蛋挞菩提 and 大号",
+    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+}
+
 # add_task_to_queue(task1)
 # add_task_to_queue(task2)
-add_task_to_queue(task3)
+# add_task_to_queue(task3)
+add_task_to_queue(combined_task)
 
 print("任务已添加到队列")
