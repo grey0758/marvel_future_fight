@@ -182,7 +182,7 @@ async def open_game_accounts(account_names):
         '小号': 'resource/images/start_nox/img_2.png',
         '鼠': 'resource/images/start_nox/img_3.png',
     }
-
+    print(account_names)
     invalid_accounts = [name for name in account_names if name not in image_paths]
     if invalid_accounts:
         for account in invalid_accounts:

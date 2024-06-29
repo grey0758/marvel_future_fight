@@ -549,7 +549,7 @@ class AppManager:
 
         # 循环五次
         a = 0
-        while a < 5:
+        while a < 7:
             image = self.take_screenshot_cv2()
             # 设置裁剪区域，格式为[y1:y2, x1:x2]
             cropped_image = image[525:710, 447:1344]
@@ -680,7 +680,7 @@ class AppManager:
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177), direct_click_coordinates=True)
-        # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_4.png', imageMatchThreshold=0.8):
+        # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
         if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_5.png'):
             if self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_8.png'):
@@ -698,7 +698,7 @@ class AppManager:
     # 修改游戏画质
     def change_game_quality(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55))
         # self.find_and_click_image(r'resource/images/change_game_quality/img_1.png', timeout_position=(536, 189),
         # image_match_threshold=0.93) self.find_and_click_image(r'resource/images/change_game_quality/img_2.png',
         # timeout_position=(2206, 56), image_match_threshold=0.93) self.driver.tap([(2260, 1000)])  # 对应于 img.png 的点击

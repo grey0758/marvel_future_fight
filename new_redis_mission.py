@@ -39,8 +39,8 @@ task2 = {
 combined_task = {
     "task_id": 3,
     "task_type": "open_game",
-    "account_names": ["蛋挞菩提", "大号"],
-    "description": "Open game accounts 蛋挞菩提 and 大号",
+    "account_names": ["大号"],
+    "description": "Open game accounts and 大号",
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
