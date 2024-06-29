@@ -190,7 +190,7 @@ class AppManager:
                 print("未在指定时间内找到图像，且没有指定超时位置")
             return False
 
-    def login(self, is_clash=False, check_clash=True, timeout=10):
+    def login(self, is_clash=False, check_clash=True, timeout=10, time_sleep=3):
         if check_clash:
             self.toggle_clash("start")
         self.activate_app("com.netmarble.mherosgb")
@@ -199,7 +199,7 @@ class AppManager:
             if self.find_and_click_image(r'./resource/images/start_war.png', click=False, timeout=3,
                                          image_match_threshold=0.8):
                 break
-            self.check_obstacle(time_sleep=3.0)
+            self.check_obstacle(time_sleep=time_sleep)
         self.check_obstacle()
         if not is_clash:
             self.toggle_clash("stop")
@@ -400,7 +400,7 @@ class AppManager:
         cropped_image = image[21:22, 94:150]
         extracted_text = pytesseract.image_to_string(cropped_image, lang='chi_sim')  # 使用中文简体模型
 
-    def daily_work_nox(self):
+    def daily_work_nox(self, timeout=30):
         def friend():
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
@@ -429,7 +429,7 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/union/img_2.png')
                 print("公会已经领取")
 
-        self.login(is_clash=False, timeout=30)
+        self.login(is_clash=False, timeout=timeout, time_sleep=15)
         friend()
         union()
         self.store()

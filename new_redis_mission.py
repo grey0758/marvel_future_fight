@@ -36,15 +36,15 @@ task2 = {
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
-combined_task = {
+combined_task_1 = {
     "task_id": 3,
     "task_type": "open_game",
-    "account_names": ["大号"],
-    "description": "Open game accounts and 大号",
+    "account_names": ["蛋挞菩提", "小号"],
+    "description": "Open game accounts 蛋挞菩提 and 小号",
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
 # 添加任务到队列
-# add_task_to_queue(task1)
+add_task_to_queue(task1)
 # add_task_to_queue(task2)
-add_task_to_queue(combined_task)
+# add_task_to_queue(combined_task_1)

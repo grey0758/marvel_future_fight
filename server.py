@@ -22,7 +22,7 @@ config_path = 'config.json'
 if not os.path.exists(config_path):
     raise FileNotFoundError(f"配置文件 {config_path} 未找到")
 
-with open(config_path, 'r') as config_file:
+with open(config_path, 'r', encoding='utf-8') as config_file:
     config = json.load(config_file)
 
 # 获取 LDPlayer 路径
