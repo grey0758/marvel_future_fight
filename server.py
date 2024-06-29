@@ -30,6 +30,11 @@ ldplayer_path = config.get('ldplayer_path')
 if not ldplayer_path:
     raise ValueError("配置文件中缺少 'ldplayer_path' 项")
 
+# 获取窗口标题
+window_title = config.get('window_title')
+if not window_title:
+    raise ValueError("配置文件中缺少 'window_title' 项")
+
 # 配置日志
 logger.add("game_task.log", rotation="1 day")
 
@@ -117,10 +122,10 @@ def start_and_focus_app():
     app = Application().start(ldplayer_path)
 
     # 等待应用程序启动
-    time.sleep(5)
+    # time.sleep(5)
 
     # 获取模拟器管理器窗口
-    dlg = Desktop(backend="uia").window(class_name="LDRemoteLoginFrame", title="雷電多開器")
+    dlg = Desktop(backend="uia").window(class_name="LDRemoteLoginFrame", title=window_title)
 
     # 确保窗口已存在并可见
     dlg.wait('visible', timeout=10)

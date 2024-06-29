@@ -679,7 +679,7 @@ class AppManager:
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177))
         # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
         if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_5.png'):
