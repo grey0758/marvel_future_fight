@@ -13,6 +13,9 @@ import ctypes
 import psutil
 import subprocess
 
+import daily_work_nox
+from main import AppManager
+
 # 配置日志
 logger.add("game_task.log", rotation="1 day")
 
@@ -201,11 +204,11 @@ async def open_game_accounts(account_names):
 def complete_daily_task(task):
     """执行每日任务"""
     try:
-        log_game_task_status("INFO", f"开始执行每日任务: {task['description']}")
-        # 这里添加完成每日任务的代码
-        log_game_task_status("SUCCESS", f"每日任务完成: {task['description']}")
+        daily_work_nox.main()
+        log_game_task_status("SUCCESS", "每日任务成功执行")
     except Exception as e:
-        log_game_task_status("ERROR", f"执行每日任务时出错: {str(e)}")
+        log_game_task_status("ERROR", f"每日任务执行失败: {str(e)}")
+
 
 
 def complete_weekly_task(task):

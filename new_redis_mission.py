@@ -7,13 +7,18 @@ REDIS_HOST = '121.37.30.225'
 REDIS_PORT = 6379
 REDIS_PASSWORD = 'ya6MCCTXsnPfYJg'
 
+# 创建Redis客户端
 redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, decode_responses=True)
 
 
 def add_task_to_queue(task):
     """将任务添加到Redis队列"""
-    task_data = json.dumps(task)
-    redis_client.lpush("game_tasks", task_data)
+    try:
+        task_data = json.dumps(task)  # 将任务转换为JSON字符串
+        redis_client.lpush("game_tasks", task_data)  # 将任务添加到Redis队列
+        print(f"任务 {task['task_id']} 已添加到队列")
+    except Exception as e:
+        print(f"添加任务失败: {str(e)}")
 
 
 # 示例任务
@@ -31,14 +36,6 @@ task2 = {
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
-task3 = {
-    "task_id": 3,
-    "task_type": "open_game",
-    "account_name": "蛋挞菩提",
-    "description": "Open game account 蛋挞菩提",
-    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-}
-
 combined_task = {
     "task_id": 3,
     "task_type": "open_game",
@@ -47,9 +44,7 @@ combined_task = {
     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
+# 添加任务到队列
 # add_task_to_queue(task1)
 # add_task_to_queue(task2)
-# add_task_to_queue(task3)
 add_task_to_queue(combined_task)
-
-print("任务已添加到队列")

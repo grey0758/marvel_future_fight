@@ -28,9 +28,7 @@ def get_adb_devices():
 
     return emulators
 
-
-if __name__ == "__main__":
-
+def main():
     # 获取设备列表并打印
     emulators = get_adb_devices()
     print(f"emulators = {emulators}")
@@ -47,3 +45,9 @@ if __name__ == "__main__":
 
     for thread in threads:
         thread.join()
+
+
+if __name__ == "__main__":
+    main()
+
+
