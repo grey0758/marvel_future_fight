@@ -17,8 +17,8 @@ def get_adb_devices():
 
     # 要排除的设备
     # excluded_device = '192.168.31.190:5559'
-    excluded_device = 'f9efd3f2'
-    # excluded_device = '0'
+    # excluded_device = 'f9efd3f2'
+    excluded_device = '0'
 
     # 提取设备信息并过滤排除设备
     emulators = []

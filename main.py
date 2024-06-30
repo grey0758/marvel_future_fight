@@ -1,9 +1,11 @@
 import base64
 import json
+import logging
 import re
 import time
 import cv2
 import numpy as np
+import pymysql
 from PIL import Image
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
@@ -11,8 +13,34 @@ from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 import pytesseract
+from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r"D:\Program Files\Tesseract-OCR\tesseract.exe"
+
+db_config = {
+    'host': '121.37.30.225',
+    'user': 'mff_user',
+    'password': 'k3#Fv8z&Qh2!',
+    'database': 'marvel_future_flight',
+}
+
+logger = logging.getLogger(__name__)
+
+
+def save_log_to_mysql(timestamp, status, message):
+    """保存日志到MySQL数据库"""
+    connection = None
+    try:
+        connection = pymysql.connect(**db_config)
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO logs (timestamp, status, message) VALUES (%s, %s, %s)"
+            cursor.execute(sql, (timestamp, status, message))
+        connection.commit()
+    except pymysql.MySQLError as e:
+        logger.error(f"保存日志到MySQL数据库时出错: {str(e)}")
+    finally:
+        if connection:
+            connection.close()
 
 
 def get_base64_image(image_path):
@@ -64,6 +92,13 @@ def preprocess_image_1(image):
 
 class AppManager:
     def __init__(self, appium_server_url, udid):
+        self.db_config = {
+            'host': '121.37.30.225',
+            'user': 'mff_user',
+            'password': 'k3#Fv8z&Qh2!',
+            'database': 'marvel_future_flight',
+        }
+        self.player_name = None
         self.popup_thread = None
         self.keep_running = None
         self.appium_server_url = appium_server_url
@@ -246,19 +281,15 @@ class AppManager:
                 check_boos_flight_floor_element()
                 self.find_and_click_image(r'resource/images/shadowland/entershadowland2.png')
                 if skip_to_next_cycle:
+                    self.driver.tap([(1080, 286)])
+                    time.sleep(.5)
                     self.driver.tap([(1643, 390)])
-                    self.find_and_click_image(r'resource/images/shadowland/descending.png',
-                                              image_match_threshold=0.8,
-                                              timeout_position=(1900, 280))
-                    self.driver.tap([(1803, 390)])
-                    time.sleep(0.2)
-                    self.driver.tap([(1965, 390)])
                     self.find_and_click_image(r'resource/images/shadowland/start.png')
                     skip_to_next_cycle = False
                 else:
                     descending_element = self.find_and_click_image(r'resource/images/shadowland/descending.png',
                                                                    image_match_threshold=0.8,
-                                                                   timeout_position=(1900, 280))
+                                                                   timeout_position=(1850, 280))
 
                     # if descending_element:
                     #     time.sleep(0.2)
@@ -287,7 +318,7 @@ class AppManager:
                                              timeout=180):
                     time.sleep(3)
                 else:
-                    self.find_and_click_image(r'resource/images/legend_war/img_7.png', image_match_threshold=0.6)
+                    self.find_and_click_image(r'resource/images/legend_war/img_7.png', image_match_threshold=0.6, timeout=30)
                     skip_to_next_cycle = True  # Set the flag to skip to the next cycle
                     time.sleep(3)
 
@@ -301,7 +332,7 @@ class AppManager:
                                               timeout=3)
                     self.find_and_click_image(r'resource/images/shadowland/img_12.png', timeout=6)
 
-                    return self.Shadowland()
+                    return self.Shadowland(first_set=True)
                 # if not executed_1:
                 #     if not self.find_and_click_image(r'resource/images/shadowland/img_11.png',
                 #                                      image_match_threshold=0.95, timeout=5, click=False):
@@ -362,6 +393,7 @@ class AppManager:
             else:
                 raise Exception("Unable to enter shadowland")
 
+
         def get_initial_stage_2():
             time.sleep(2)
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
@@ -382,6 +414,11 @@ class AppManager:
 
         if first_set:
             self.change_game_quality()
+            self.find_and_click_image(r'resource/images/start_war.png')
+            self.driver.tap([(979, 200)])
+            time.sleep(0.5)
+            self.driver.tap([(1320, 671)])
+            self.check_obstacle()
             self.find_and_click_image(r'resource/images/start_war.png')
             self.driver.tap([(979, 200)])
             time.sleep(0.5)
@@ -442,10 +479,12 @@ class AppManager:
 
     def store(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404),
+                                  direct_click_coordinates=True)
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/daily_work/store.png', timeout_position=(90, 404),
+                                  direct_click_coordinates=True)
 
         if self.find_and_click_image(r'resource/images/normal_store/img_1.png'):
             if self.find_and_click_image(r'resource/images/normal_store/img_3.png',
@@ -615,12 +654,14 @@ class AppManager:
 
     def multiverse_invasion(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
@@ -635,11 +676,13 @@ class AppManager:
 
     def otherworldly_battle(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         time.sleep(5)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_2.png', timeout_position=(1400, 1000))
         if self.find_and_click_image(r'resource/images/otherworldly_battle/img_8.png'):
@@ -649,7 +692,8 @@ class AppManager:
         else:
             self.driver.tap([(1224, 711)])
             time.sleep(0.5)
-            self.find_and_click_image(r'resource/images/otherworldly_battle/img_4.png', timeout_position=(1340, 850), direct_click_coordinates=True)
+            self.find_and_click_image(r'resource/images/otherworldly_battle/img_4.png', timeout_position=(1340, 850),
+                                      direct_click_coordinates=True)
         while True:
             if self.find_and_click_image(r'resource/images/otherworldly_battle/img_7.png'):
                 print('异世战斗完成')
@@ -658,7 +702,7 @@ class AppManager:
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img_10.png',
                                           timeout_position=(1666, 1022))
                 self.check_obstacle()
-                self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000))
+                self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000))
                 self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
                 self.find_and_click_image(r'resource/images/multiverse_invasion/img_8.png',
                                           timeout_position=(1020, 191))
@@ -671,14 +715,16 @@ class AppManager:
 
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         time.sleep(8)
         self.check_obstacle()
-        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1900, 1000), direct_click_coordinates=True)
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
-        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1900, 1000))
+        self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177))
         # if not self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img.png', imageMatchThreshold=0.8):
         #     self.driver.tap([(1636, 914)])
@@ -825,6 +871,10 @@ class AppManager:
         self.check_obstacle()
 
     def get_id(self):
+
+        if self.player_name:
+            return self.player_name
+
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55),
                                   direct_click_coordinates=True)
@@ -834,7 +884,145 @@ class AppManager:
 
         # 获取剪贴板内容
         clipboard_text = self.driver.get_clipboard_text()
-        print("Clipboard content:", clipboard_text)
+        # print("Clipboard content:", clipboard_text)
+        if clipboard_text:
+            self.player_name = clipboard_text
+            return clipboard_text
+        else:
+            self.player_name = 'default_player'
+            return 'default_player'
+
+    def daily_work_2(self):
+        self.check_obstacle()
+        self.get_id()
+        self.check_obstacle()
+        self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
+                                  direct_click_coordinates=True)
+
+        if self.find_and_click_image(r'resource/images/daily_work_2/img.png'):
+            time.sleep(1)
+            self.driver.tap([(929, 572)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('hidden_secret_left')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+
+            self.driver.tap([(1533, 547)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('hidden_secret_right')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+
+        if self.find_and_click_image(r'resource/images/daily_work_2/img_1.png'):
+            time.sleep(1)
+            self.driver.tap([(929, 572)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('healthy_twins_left')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+
+            self.driver.tap([(1533, 547)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('healthy_twins_right')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+
+        if self.find_and_click_image(r'resource/images/daily_work_2/img_2.png'):
+            time.sleep(1)
+            self.driver.tap([(929, 572)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('unfortunate_fate_left')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+
+            self.driver.tap([(1533, 547)])
+            time.sleep(1)
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('unfortunate_fate_right')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            time.sleep(1)
+
+        if self.find_and_click_image(r'resource/images/daily_work_2/img_6.png'):
+            self.find_and_click_image(r'resource/images/daily_work_2/img_7.png', timeout_position=(1067, 1023))
+            self.find_and_click_image(r'resource/images/daily_work_2/img_3.png', timeout_position=(1067, 1023))
+            if not self.find_and_click_image(r'resource/images/daily_work_2/img_5.png', click=False):
+                self.find_and_click_image(r'resource/images/daily_work_2/img_4.png', timeout_position=(1200, 828))
+            time.sleep(1)
+            self.driver.press_keycode(4)
+            self.update_task_status('united_fate_normal')
+            time.sleep(1)
+            self.driver.press_keycode(4)
+
+    def update_task_status(self, task_name):
+        """更新任务状态"""
+        connection = None
+        try:
+            connection = pymysql.connect(**self.db_config)
+            with connection.cursor() as cursor:
+                # 获取今天的日期
+                today = datetime.now().date()
+
+                # 获取 game_id
+                game_id = self.get_id()
+
+                # 确保任务表中有玩家的记录
+                sql = f"""
+                INSERT INTO tasks (game_id, date)
+                VALUES (%s, %s)
+                ON DUPLICATE KEY UPDATE {task_name} = TRUE;
+                """
+                cursor.execute(sql, (game_id, today))
+            connection.commit()
+
+            # 记录任务完成日志
+            timestamp = datetime.now()
+            save_log_to_mysql(timestamp, 'Success', f"任务 {task_name} 已完成 for game_id {game_id}")
+        except pymysql.MySQLError as e:
+            logger.error(f"更新任务状态时出错: {str(e)}")
+            timestamp = datetime.now()
+            save_log_to_mysql(timestamp, 'Error', f"更新任务状态时出错: {str(e)}")
+        finally:
+            if connection:
+                connection.close()
 
 
 if __name__ == "__main__":
@@ -847,6 +1035,6 @@ if __name__ == "__main__":
     # app_manager.daily_work_nox()
     # app_manager.legend_war()
     # app_manager.legend_war()
-    app_manager.get_id()
+    app_manager.daily_work_2()
     # app_manager.daily_quiz()
     # app_manager.multiverse_invasion()
