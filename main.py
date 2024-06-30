@@ -655,13 +655,13 @@ class AppManager:
     def multiverse_invasion(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         time.sleep(5)
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/multiverse_invasion/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
@@ -677,12 +677,12 @@ class AppManager:
     def otherworldly_battle(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         time.sleep(5)
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_1.png')
         self.find_and_click_image(r'resource/images/otherworldly_battle/img_2.png', timeout_position=(1400, 1000))
         if self.find_and_click_image(r'resource/images/otherworldly_battle/img_8.png'):
@@ -716,13 +716,13 @@ class AppManager:
     def TIMELINE_BATTLE(self):
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         time.sleep(8)
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_1.png')
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_2.png', timeout_position=(1850, 1000))
         self.find_and_click_image(r'resource/images/TIMELINE_BATTLE/img_3.png', timeout_position=(60, 177))
@@ -897,7 +897,7 @@ class AppManager:
         self.get_id()
         self.check_obstacle()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
-                                  direct_click_coordinates=True)
+                                  direct_click_coordinates=False)
 
         if self.find_and_click_image(r'resource/images/daily_work_2/img.png'):
             time.sleep(1)
