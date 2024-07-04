@@ -1,6 +1,7 @@
 import base64
 import json
 import logging
+import os
 import re
 import time
 import cv2
@@ -90,6 +91,39 @@ def preprocess_image_1(image):
     return processed_image_pil
 
 
+def get_game_id_by_devices_udids(udids):
+    """通过 devices 和 udids 获取 game_id"""
+    # 读取配置文件
+    config_path = 'config.json'
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"配置文件 {config_path} 未找到")
+
+    with open(config_path, 'r', encoding='utf-8') as config_file:
+        config = json.load(config_file)
+    devices = config.get('devices')
+    connection = None
+    try:
+        connection = pymysql.connect(**db_config)
+        with connection.cursor() as cursor:
+            sql =  """
+            SELECT player_name, game_id
+            FROM players
+            WHERE JSON_EXTRACT(udids, '$.devices') = %s
+              AND JSON_CONTAINS(JSON_EXTRACT(udids, '$.udids'), %s)
+            """
+            cursor.execute(sql, (json.dumps(devices), json.dumps(udids)))
+            result = cursor.fetchone()
+            return {
+                'player_name': result['player_name'],
+                'game_id': result['game_id']
+            } if result else None
+    except pymysql.MySQLError as e:
+        logger.error(f"获取 player_name 和 game_id 时出错: {str(e)}")
+    finally:
+        if connection:
+            connection.close()
+
+
 class AppManager:
     def __init__(self, appium_server_url, udid):
         self.db_config = {
@@ -103,7 +137,7 @@ class AppManager:
         self.keep_running = None
         self.appium_server_url = appium_server_url
         self.driver = None
-        self.uuid = udid
+        self.udid = udid
         self.setup_driver(udid)
 
     def setup_driver(self, udid):
@@ -318,7 +352,8 @@ class AppManager:
                                              timeout=180):
                     time.sleep(3)
                 else:
-                    self.find_and_click_image(r'resource/images/legend_war/img_7.png', image_match_threshold=0.6, timeout=30)
+                    self.find_and_click_image(r'resource/images/legend_war/img_7.png', image_match_threshold=0.6,
+                                              timeout=30)
                     skip_to_next_cycle = True  # Set the flag to skip to the next cycle
                     time.sleep(3)
 
@@ -392,7 +427,6 @@ class AppManager:
                         return 16
             else:
                 raise Exception("Unable to enter shadowland")
-
 
         def get_initial_stage_2():
             time.sleep(2)
@@ -471,7 +505,7 @@ class AppManager:
         union()
         self.store()
         self.otherworldly_battle()
-        if self.uuid not in ['emulator-5554', 'emulator-5556']:
+        if self.udid not in ['emulator-5554', 'emulator-5556']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
         self.check_obstacle()
@@ -875,24 +909,35 @@ class AppManager:
         if self.player_name:
             return self.player_name
 
-        self.check_obstacle()
-        self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55),
-                                  direct_click_coordinates=True)
-        time.sleep(1)
-        self.find_and_click_image(r'resource/images/get_id/img.png', timeout_position=(1555, 382),
-                                  direct_click_coordinates=True)
-
-        # 获取剪贴板内容
-        clipboard_text = self.driver.get_clipboard_text()
-        # print("Clipboard content:", clipboard_text)
-        if clipboard_text:
-            self.player_name = clipboard_text
-            return clipboard_text
+        json_1 = get_game_id_by_devices_udids(self.udid)
+        if json_1:
+            self.player_name = json_1['player_name']
+            return json_1['player_name']
         else:
             self.player_name = 'default_player'
             return 'default_player'
 
+
+
+        # self.check_obstacle()
+        # self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55),
+        #                           direct_click_coordinates=True)
+        # time.sleep(1)
+        # self.find_and_click_image(r'resource/images/get_id/img.png', timeout_position=(1555, 382),
+        #                           direct_click_coordinates=True)
+
+        # 获取剪贴板内容
+        # clipboard_text = self.driver.get_clipboard_text()
+        # # print("Clipboard content:", clipboard_text)
+        # if clipboard_text:
+        #     self.player_name = clipboard_text
+        #     return clipboard_text
+        # else:
+        #     self.player_name = 'default_player'
+        #     return 'default_player'
+
     def daily_work_2(self):
+        self.login(is_clash=False, timeout=30, time_sleep=15)
         self.check_obstacle()
         self.get_id()
         self.check_obstacle()
