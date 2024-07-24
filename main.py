@@ -472,6 +472,8 @@ class AppManager:
         extracted_text = pytesseract.image_to_string(cropped_image, lang='chi_sim')  # 使用中文简体模型
 
     def daily_work_nox(self, timeout=30):
+        self.change_game_quality()
+        self.check_obstacle()
         def friend():
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
@@ -505,7 +507,7 @@ class AppManager:
         union()
         self.store()
         self.otherworldly_battle()
-        if self.udid not in ['emulator-5554', 'emulator-5556']:
+        if self.udid not in ['emulator-5554', 'emulator-5560']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
         self.check_obstacle()
@@ -610,9 +612,15 @@ class AppManager:
         def open_daily_quiz():
             self.check_obstacle()
             self.change_game_quality()
+            self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
-            self.find_and_click_image(r'resource/images/daily_quiz/img_1.png')
-            self.find_and_click_image(r'resource/images/daily_quiz/img_2.png')
+            time.sleep(.5)
+            self.find_and_click_image(r'resource/images/daily_quiz/img_1.png', image_match_threshold=0.65, timeout_position=(2207, 559))
+            self.find_and_click_image(r'resource/images/daily_quiz/img_2.png', image_match_threshold=0.65, timeout_position=(2207, 559))
+            time.sleep(0.5)
+            self.driver.tap([(1430, 164)])
+            time.sleep(0.5)
+            self.driver.tap([(1430, 164)])
             self.find_and_click_image(r'resource/images/daily_quiz/img_3.png')
             self.find_and_click_image(r'resource/images/daily_quiz/img_4.png')
 
@@ -699,6 +707,7 @@ class AppManager:
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_1.png')
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_2.png', timeout_position=(2150, 100))
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_3.png', timeout_position=(1760, 1000))
+        self.driver.tap([(1760, 1000)])
         self.find_and_click_image(r'resource/images/multiverse_invasion/img_4.png', timeout_position=(1350, 800))
         while True:
             if self.find_and_click_image(r'resource/images/multiverse_invasion/img_6.png'):

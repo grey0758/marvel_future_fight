@@ -16,16 +16,17 @@ def get_adb_devices():
     output = result.stdout.strip().split('\n')
 
     # 要排除的设备
-    # excluded_device = '192.168.31.190:5559'
-    # excluded_device = 'f9efd3f2'
     excluded_device = '0'
+    # excluded_device = '192.168.31.190:5559'
+    excluded_device = ['emulator-5554', 'emulator-5560']
+
 
     # 提取设备信息并过滤排除设备
     emulators = []
     for line in output[1:]:  # 跳过第一行 "List of devices attached"
         if 'device' in line:
             device_info = line.split('\t')[0]
-            if device_info != excluded_device:
+            if device_info not in excluded_device:
                 emulators.append(device_info)
 
     return emulators
