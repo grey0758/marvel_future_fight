@@ -376,7 +376,7 @@ class AppManager:
                 #         executed_1 = True
                 #     executed_1 = True
                 self.find_and_click_image(r'resource/images/shadowland/img_6.png',
-                                          image_match_threshold=0.8, y_offset=80, x_offset=100)
+                                          image_match_threshold=0.80, y_offset=80, x_offset=100)
 
                 # self.driver.tap([(element.location['x'] + 200, element.location['y'] + 100)])
                 self.find_and_click_image(r'resource/images/shadowland/descending.png', click=False)
@@ -404,13 +404,13 @@ class AppManager:
             if self.find_and_click_image(r'resource/images/shadowland/entershadowland.png'):
                 time.sleep(0.5)
                 if self.find_and_click_image(r'resource/images/shadowland/img_9.png', timeout=3, click=False,
-                                             image_match_threshold=0.95):
+                                             image_match_threshold=0.93):
                     if self.find_and_click_image(r'resource/images/shadowland/img_6.png',
                                                  image_match_threshold=0.8, y_offset=80, x_offset=100, click=False):
                         self.driver.press_keycode(4)
                         return 16
                     else:
-                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.85,
                                                   x_offset=-100)
                         time.sleep(0.5)
                         self.driver.press_keycode(4)
@@ -421,7 +421,7 @@ class AppManager:
                         self.driver.press_keycode(4)
                         return 37
                     else:
-                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.9,
+                        self.find_and_click_image(r'resource/images/shadowland/img_7.png', image_match_threshold=0.85,
                                                   x_offset=-100)
                         self.driver.press_keycode(4)
                         return 16
