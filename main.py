@@ -472,8 +472,6 @@ class AppManager:
         extracted_text = pytesseract.image_to_string(cropped_image, lang='chi_sim')  # 使用中文简体模型
 
     def daily_work_nox(self, timeout=30):
-        self.change_game_quality()
-        self.check_obstacle()
         def friend():
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
@@ -503,11 +501,13 @@ class AppManager:
                 print("公会已经领取")
 
         self.login(is_clash=False, timeout=timeout, time_sleep=15)
+        self.change_game_quality()
+        self.check_obstacle()
         friend()
         union()
         self.store()
         self.otherworldly_battle()
-        if self.udid not in ['emulator-5554', 'emulator-5560']:
+        if self.udid not in ['emulator-5554', 'emulator-5556']:
             self.TIMELINE_BATTLE()
         self.multiverse_invasion()
         self.check_obstacle()
