@@ -478,16 +478,14 @@ class AppManager:
             self.find_and_click_image(r'resource/images/friend/img.png')
             self.find_and_click_image(r'resource/images/friend/img_1.png')
             self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2)
+            if self.find_and_click_image(r'resource/images/friend/img_5.png'):
+                self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2)
             if self.find_and_click_image(r'resource/images/friend/img_3.png'):
                 self.find_and_click_image(r'resource/images/friend/img_4.png')
                 self.find_and_click_image(r'resource/images/friend/img_5.png')
-                if self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2):
-                    if self.find_and_click_image(r'resource/images/friend/img_3.png'):
-                        self.find_and_click_image(r'resource/images/friend/img_4.png')
-                        self.find_and_click_image(r'resource/images/friend/img_5.png')
-                    else:
-                        self.find_and_click_image(r'resource/images/friend/img_6.png', timeout=5)
-                        print("好友已经领取")
+                self.find_and_click_image(r'resource/images/friend/img_2.png', timeout=2)
+                self.find_and_click_image(r'resource/images/friend/img_5.png')
+                print("好友已经领取")
             else:
                 self.find_and_click_image(r'resource/images/friend/img_6.png', timeout=5)
                 print("好友已经领取")
