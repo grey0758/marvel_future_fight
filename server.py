@@ -218,6 +218,8 @@ async def open_game_accounts(account_names):
     success = await monitor_emulator_start(initial_emulators)
     if success:
         log_game_task_status('INFO', f"模拟器启动成功: {', '.join(account_names)}")
+        time.sleep(10)
+        daily_work_nox.main()
     else:
         log_game_task_status('ERROR', f"模拟器启动失败: {', '.join(account_names)}")
 
@@ -229,7 +231,6 @@ def complete_daily_task(task):
         log_game_task_status("SUCCESS", "每日任务成功执行")
     except Exception as e:
         log_game_task_status("ERROR", f"每日任务执行失败: {str(e)}")
-
 
 
 def complete_weekly_task(task):
