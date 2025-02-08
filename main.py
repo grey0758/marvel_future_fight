@@ -93,30 +93,31 @@ def preprocess_image_1(image):
 
 def get_game_id_by_devices_udids(udids):
     """通过 devices 和 udids 获取 game_id"""
-    # 读取配置文件
     config_path = 'config.json'
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"配置文件 {config_path} 未找到")
 
     with open(config_path, 'r', encoding='utf-8') as config_file:
         config = json.load(config_file)
-    devices = config.get('devices')
+    devices = config.get('device_name')
     connection = None
     try:
         connection = pymysql.connect(**db_config)
         with connection.cursor() as cursor:
-            sql =  """
+            sql = """
             SELECT player_name, game_id
             FROM players
-            WHERE JSON_EXTRACT(udids, '$.devices') = %s
-              AND JSON_CONTAINS(JSON_EXTRACT(udids, '$.udids'), %s)
+            WHERE JSON_UNQUOTE(JSON_EXTRACT(udids, '$.devices')) = %s
+              AND JSON_UNQUOTE(JSON_EXTRACT(udids, '$.udids')) = %s
             """
-            cursor.execute(sql, (json.dumps(devices), json.dumps(udids)))
+            cursor.execute(sql, (devices, udids))
             result = cursor.fetchone()
-            return {
-                'player_name': result['player_name'],
-                'game_id': result['game_id']
-            } if result else None
+            if result:
+                return {
+                    'player_name': result[0],
+                    'game_id': result[1]
+                }
+            return None
     except pymysql.MySQLError as e:
         logger.error(f"获取 player_name 和 game_id 时出错: {str(e)}")
     finally:
@@ -126,6 +127,7 @@ def get_game_id_by_devices_udids(udids):
 
 class AppManager:
     def __init__(self, appium_server_url, udid):
+        self.game_id = None
         self.db_config = {
             'host': '192.168.188.132',
             'user': 'mff_user',
@@ -613,8 +615,10 @@ class AppManager:
             self.check_obstacle()
             self.find_and_click_image(r'resource/images/daily_quiz/img.png')
             time.sleep(.5)
-            self.find_and_click_image(r'resource/images/daily_quiz/img_1.png', image_match_threshold=0.65, timeout_position=(2207, 559))
-            self.find_and_click_image(r'resource/images/daily_quiz/img_2.png', image_match_threshold=0.65, timeout_position=(2207, 559))
+            self.find_and_click_image(r'resource/images/daily_quiz/img_1.png', image_match_threshold=0.65,
+                                      timeout_position=(2207, 559))
+            self.find_and_click_image(r'resource/images/daily_quiz/img_2.png', image_match_threshold=0.65,
+                                      timeout_position=(2207, 559))
             time.sleep(0.5)
             self.driver.tap([(1430, 164)])
             time.sleep(0.5)
@@ -913,18 +917,18 @@ class AppManager:
 
     def get_id(self):
 
-        if self.player_name:
-            return self.player_name
+        if self.game_id:
+            return self.game_id
 
         json_1 = get_game_id_by_devices_udids(self.udid)
         if json_1:
+            self.game_id = json_1['game_id']
             self.player_name = json_1['player_name']
-            return json_1['player_name']
+            return json_1['game_id']
         else:
+            self.game_id = 'default_player'
             self.player_name = 'default_player'
             return 'default_player'
-
-
 
         # self.check_obstacle()
         # self.find_and_click_image(r'resource/images/change_game_quality/img.png', timeout_position=(2174, 55),
@@ -948,6 +952,7 @@ class AppManager:
         self.check_obstacle()
         self.get_id()
         self.check_obstacle()
+        self.change_game_quality()
         self.find_and_click_image(r'resource/images/otherworldly_battle/img.png', timeout_position=(1850, 1000),
                                   direct_click_coordinates=False)
 
