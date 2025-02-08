@@ -19,7 +19,7 @@ from datetime import datetime
 pytesseract.pytesseract.tesseract_cmd = r"D:\Program Files\Tesseract-OCR\tesseract.exe"
 
 db_config = {
-    'host': '121.37.30.225',
+    'host': '192.168.188.132',
     'user': 'mff_user',
     'password': 'k3#Fv8z&Qh2!',
     'database': 'marvel_future_flight',
@@ -127,7 +127,7 @@ def get_game_id_by_devices_udids(udids):
 class AppManager:
     def __init__(self, appium_server_url, udid):
         self.db_config = {
-            'host': '121.37.30.225',
+            'host': '192.168.188.132',
             'user': 'mff_user',
             'password': 'k3#Fv8z&Qh2!',
             'database': 'marvel_future_flight',
@@ -183,7 +183,7 @@ class AppManager:
             elif action == "stop" and (status_text == "Running" or status_text == "运行中"):
                 # 如果Clash正在运行，点击停止按钮
                 self.tap_element(status_element)
-                print("Clash was running. Attempting to stop...")
+                print("Clash was running. Attempting0 to stop...")
             else:
                 print(f"Clash is already {status_text.lower()}.")
         except Exception as e:

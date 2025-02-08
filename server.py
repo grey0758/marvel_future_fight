@@ -40,7 +40,7 @@ logger.add("game_task.log", rotation="1 day")
 
 # 配置Redis连接
 redis_client = redis.StrictRedis(
-    host='121.37.30.225',
+    host='192.168.188.132',
     port=6379,
     password='ya6MCCTXsnPfYJg',
     decode_responses=True,
@@ -49,7 +49,7 @@ redis_client = redis.StrictRedis(
 
 # 配置MySQL连接
 db_config = {
-    'host': '121.37.30.225',
+    'host': '192.168.188.132',
     'user': 'mff_user',
     'password': 'k3#Fv8z&Qh2!',
     'database': 'marvel_future_flight',
@@ -195,9 +195,13 @@ async def open_game_accounts(account_names):
             log_game_task_status('ERROR', f"无效的账号名称: {account}")
         return
 
+    print("testaab")
+
     app, dlg = start_and_focus_app()
 
     time.sleep(2)
+
+    print("testaa")
 
     initial_emulators = get_adb_devices()
     logger.info(f"初始模拟器数量: {len(initial_emulators)}")
@@ -205,6 +209,8 @@ async def open_game_accounts(account_names):
     app = Application().connect(process=app.process)
     ldremote_login_frame = app.window(handle=dlg.handle)
     ldremote_login_frame.set_focus()
+
+
 
     for account_name in account_names:
         if find_and_click_image(image_paths[account_name], offset_x=520):
@@ -218,6 +224,8 @@ async def open_game_accounts(account_names):
     success = await monitor_emulator_start(initial_emulators)
     if success:
         log_game_task_status('INFO', f"模拟器启动成功: {', '.join(account_names)}")
+        time.sleep(10)
+        daily_work_nox.main()
     else:
         log_game_task_status('ERROR', f"模拟器启动失败: {', '.join(account_names)}")
 
@@ -229,7 +237,6 @@ def complete_daily_task(task):
         log_game_task_status("SUCCESS", "每日任务成功执行")
     except Exception as e:
         log_game_task_status("ERROR", f"每日任务执行失败: {str(e)}")
-
 
 
 def complete_weekly_task(task):
